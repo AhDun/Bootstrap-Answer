@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>Title</title>
+    <link href="Bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <script src="Bootstrap/dist/js/bootstrap.js"></script>
+    <style>
+        div {
+
+        }
+    </style>
+</head>
+
+<body>
+<div id="time" style="display: inline-block;"></div>
+<div id="ip" style="display: inline-block;" ></div>
+<div id="device" style="display: inline-block;"></div>
+
+
+<div class="container mt-3">
+    <h2></h2>
+    <p></p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Num</th>
+            <th>TIME</th>
+            <th>Timer</th>
+            <th>Count</th>
+            <th>Grade</th>
+            <th>Device</th>
+        </tr>
+        </thead>
+        <tbody id="table">
+        <tr>
+            <td>John</td>
+            <td>Doe</td>
+            <td>john@example.com</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+<script>
+    function readTextFile(url, callback) {
+        fetch(url)
+            .then(response => response.text())
+            .then(data => callback(data));
+    }
+    readTextFile('grade.txt',function (data){
+        const time = String(data).match(/(?<=\[).*(?=\])/g);
+        const grade = String(data).match(/(?<=得了).*(?=分)/g);
+        const timer = String(data).match(/(?<=用了).*秒/g);
+        const count = String(data).match(/(?<=答了).*(?=个题)/g);
+        const devices = String(data).match(/(?<=设备).*/g);
+        let device = [];
+        let j = 0;
+        for(let i = 0; i < devices.length;i++){
+            if(devices[i] != ''){
+                device[j++] = devices[i];
+            }
+        }
+
+        const ip = String(data).match(/(?<=\]) [\d]*\.[\d]*\.[\d]*\.[\d]*/g);
+        let html = '';
+        for(let i = time.length - 1; i > 0;i--){
+            html += '<tr><td>' + i + '</td><td>'+ time[i] + '</td>'  + '<td>' + timer[i] +'</td>' + '<td>' + count[i] +'</td>' + '<td>' + grade[i]+'</td>'+'<td>' + device[i] + '</td>' + '</tr>';
+        }
+
+        document.getElementById('table').innerHTML= html + '</tr>';
+        console.log(data);
+    });
+
+
+
+</script>
+</html>
